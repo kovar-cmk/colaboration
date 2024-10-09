@@ -42,7 +42,6 @@ body{
     font-size: 3rem;
     color: white;
     margin-top: 2rem;
-    text-shadow: 0 0 25px aquamarine;
     font-weight: 800;
     cursor: pointer;
     transition: 0.3s ease-in-out;
@@ -71,7 +70,7 @@ body{
     color: aquamarine;
     border-bottom: 3px solid aquamarine;
 }
-#menu-icon{
+.menu-icon{
     font-size: 3.6rem;
     color: aquamarine;
     display: none;
@@ -148,7 +147,7 @@ span{
 
 .home-img img{
     position: relative;
-    width: 240px;
+    width: 20%;
     border-radius: 43%;
     cursor: pointer;
     transition: 0.2s linear;
@@ -214,9 +213,9 @@ span{
 }
 
 .text-animation{
-    font-size: 34px;
+    font-size: 2.3%;
     font-weight: 600;
-    min-width: 280px;
+    min-width: 23.3%;
 }
 
 .text-animation span{
@@ -335,13 +334,15 @@ span{
 .Skills-box{
      background-size: cover;
      display: flex;
-     margin:  0 auto;
+     position: relative;
+     width: 90%;
+     margin:  0 10rem;
      text-align: center;
      justify-content: center;
      flex-direction: column;
 }
 .Networking-skills .heading {
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     cursor: pointer;
 }
 .Network-skills h2,
@@ -351,7 +352,7 @@ span{
     text-align: center;
     color: white;
     text-shadow: 0 0 25px aquamarine;
-    margin: 1rem;
+    margin: 2rem;
 }
 .Network-skills p,
 .CyberSecurity-skills p,
@@ -369,15 +370,19 @@ span{
 .wrapper {
     display: flex;
     grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 .skills-box {
     display: flex;
-    margin: 0 2rem;
-    padding: 10px 40px  ;
-    min-height: 550px;
-    max-width: 450px;
+    margin: 0 0;
+    padding: 2rem 0;
+    min-height: 110%;
+    max-width: 80%;
     background: rgba(107, 106, 106, 0.1) ;
     border: 3px solid aqua;
     border-radius: 4%;
@@ -488,8 +493,8 @@ span{
 }
 .bubles span{
     position: relative;
-    width: 5px;
-    height: 5px;
+    width: 0.5%;
+    height: 0.5%;
     background: whitesmoke;
     margin: 0 4px;
     border-radius: 20%;
@@ -562,7 +567,7 @@ span{
     position: relative;
     bottom: 0;
     width: 100%;
-    padding: 40px 0;
+    padding: 4 0;
     background-color: #080808;
 }
 .footer .social-icons { 
@@ -589,8 +594,10 @@ span{
     }
     .skills-container{
         padding-bottom: 7rem;
-        grid-template-columns: repeat(2,1fr);
-        max-resolution: 0 5rem;
+        
+        margin: 0 2rem;
+        padding: 0 0;
+        width: 80%;
 
     }
 }
@@ -601,6 +608,7 @@ span{
     section{
         padding: 10rem 3% 2rem;
     }
+
     .timeline-item::before{
         left: 7px;
     }
@@ -615,21 +623,28 @@ span{
     .timeline-dot{
         left: 0;
     }
-    .skills{
-        padding-bottom: 7rem;
+    .skills-box{
+        padding-bottom: 1%;
+        align-items: center;
+        align-content: center;
+        width: 100%;
     }
-    .skills .wrapper{
-        grid-template-columns: repeat(1,1fr);
+    .skills-box .wrapper{
+         align-items: center;
+         align-content: center;
+         width: 100%;
+ 
     }
     .Contact-ME form{
         flex-direction: column;
+        padding: auto;
     }
 }   .footer {
-    padding: 2rem 3%;
+    padding: 1rem 4%;
 }
-@media(max-width:895){
+@media(max-width:895px){
     #menu-icon{
-        display: block ;
+        display: block;
     }
     .navbar{
         position: absolute;
@@ -665,7 +680,7 @@ span{
         margin-top: 3rem;
     }
     .home-content p{
-        max-width: 600px;
+        max-width: 100%;
         max-width: 0 auto;
     }
     .home-img{
@@ -674,7 +689,10 @@ span{
     .skills h2{
         margin-bottom: 3rem;
     }
-    .skills-container{
-        grid-template-columns: repeat(1,1fr);
+    .skills-box{
+        width: 100%;
+        max-width: 100%;
     }
+ 
 }
+

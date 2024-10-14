@@ -13,15 +13,24 @@
 <body>
     <header class="header">
         <a href="#" class="logo">ABDELBASSET <span>BENGHINA</span></a>
-    </label>
-        <box-icon name='menu' id="menu-icon" class="burger-icon"></box-icon>
-        <nav class="navbar">
-            <a href="#home" class="active"> Home</a>
+        
+        <div class="burger-icon" id="burger-icon">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    
+        <nav class="navbar" id="navbar">
+            <a href="#home" class="active">Home</a>
             <a href="#Skills">Skills</a>
             <a href="#Education">Education</a>
             <a href="#Blog">Blog</a>
         </nav>
-        <box-icon  name='menu-icon' id="menu-icon"></box-icon>
+        <script>
+            document.getElementById('burger-icon').addEventListener('click', function() {
+                document.getElementById('navbar').classList.toggle('active');
+            });
+        </script>
     </header>
     <section class="home">
         <div class="home-img">
@@ -216,17 +225,18 @@
                 <h2>Contact <span>ME.</span></h2>
                 <div class="contact-box">
                     <form action="send_email.php" method="post">
-                        <div class="input-group">
+                        <!-- contact form not yet implemented -->
+                        <!-- <div class="input-group">
                             <div class="input-box">
                                 <input type="text" placeholder="Full Name .">
                                 <input type="email" placeholder="Email">
                                 <input type="number" placeholder="Phone Number">
                                 <input type="text" placeholder="Subject">
                             </div>
-                        </div>
+                        </div> -->
                         <div class="input-group-2">
-                            <textarea name="" id="" cols="30" rows="10" placeholder="Your Message ."></textarea>
-                            <input type="submit" value="Send Message" class="btn">
+                            <!-- <textarea name="" id="" cols="30" rows="10" placeholder="Your Message ."></textarea> -->
+                            <a href="mailto:bassetben85@gmail.com" class="btn">Send Message</a>
                         </div>
                     </form>
 

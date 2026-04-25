@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-mode="red">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NS // Cybersecurity Engineer</title>
+
+  <!-- ── External libraries ── -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link  rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <!-- ── Tailwind font config ── -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            mono:    ['JetBrains Mono','monospace'],
+            display: ['Orbitron','sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+
+  <!-- ── Portfolio stylesheet ── -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="font-mono">
+
+<!-- ═══ OVERLAYS ════════════════════════════════════════════ -->
+<div id="cursor-glow"></div>
+<div id="scanlines"></div>
+<div id="mode-flash"></div>
+<canvas id="bg-canvas" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+
+<!-- ═══ PROJECT HOVER CARD ══════════════════════════════════ -->
+<div id="project-card"></div>
+
+<!-- ═══ COMMAND PALETTE ═════════════════════════════════════ -->
+<div id="cmd-palette">
+  <div class="cmd-box">
+    <div class="cmd-input-wrap" style="display:flex;align-items:center;padding:0 1rem;border-bottom:1px solid var(--border)">
+      <i class="fa-solid fa-terminal" style="color:var(--accent);font-size:.8rem"></i>
+      <input id="cmd-input" class="cmd-input" placeholder="Type a command..." autocomplete="off">
+    </div>
+    <div id="cmd-list" class="cmd-list"></div>
+  </div>
+</div>
+
+<!-- ═══ NAVIGATION ══════════════════════════════════════════ -->
+<nav>
+  <div class="max-w-6xl mx-auto px-4 h-14 flex items-center justify-between">
+    <div class="flex items-center gap-6">
+      <div class="nav-logo">NS<span>://</span></div>
+      <div class="hidden md:flex items-center gap-5">
+        <a href="#hero"     class="nav-link active">Home</a>
+        <a href="#skills"   class="nav-link">Skills</a>
+        <a href="#projects" class="nav-link">Projects</a>
+        <a href="#about"    class="nav-link">About</a>
+        <a href="#tech"     class="nav-link">Stack</a>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <!-- Red/Blue mode toggle -->
+      <div class="mode-toggle" onclick="toggleMode()" title="Switch Red/Blue Mode">
+        <span class="mode-label red-label">RED</span>
+        <span class="mode-label blue-label">BLUE</span>
+        <div class="slider"></div>
+      </div>
+      <!-- Command palette trigger -->
+      <button onclick="openCmdPalette()"
+              class="hidden md:flex items-center gap-2 px-2.5 py-1 rounded-lg border border-[var(--border)] text-[var(--text2)] text-xs hover:border-[var(--accent)] hover:text-[var(--accent)] transition-all"
+              title="Ctrl+K">
+        <i class="fa-solid fa-magnifying-glass text-[.6rem]"></i>
+        <span>Cmd</span>
+        <kbd class="text-[.55rem] opacity-50">&#8984;K</kbd>
+      </button>
+      <!-- Mobile hamburger -->
+      <button onclick="toggleMobileMenu()" class="md:hidden text-[var(--text2)] text-lg">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile nav overlay -->
+<div id="mobile-menu">
+  <a href="#hero"     class="nav-link" onclick="toggleMobileMenu()">Home</a>
+  <a href="#skills"   class="nav-link" onclick="toggleMobileMenu()">Skills</a>
+  <a href="#projects" class="nav-link" onclick="toggleMobileMenu()">Projects</a>
+  <a href="#about"    class="nav-link" onclick="toggleMobileMenu()">About</a>
+  <a href="#tech"     class="nav-link" onclick="toggleMobileMenu()">Stack</a>
+  <button onclick="toggleMobileMenu()" class="absolute top-4 right-4 text-[var(--text2)] text-xl">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>
+
+<!-- ═══ MAIN CONTENT ════════════════════════════════════════ -->
+<main class="relative z-10">
+
+  <!-- ──────────────────── HERO ──────────────────────────── -->
+  <section id="hero" class="max-w-6xl mx-auto px-4 pt-20">
+    <div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
+
+      <!-- Avatar Photo -->
+      <div class="avatar-wrap flex-shrink-0">
+        <!-- Outer orbit ring (slow spin) -->
+        <div class="avatar-orbit">
+          <!-- Orbit dots -->
+          <span class="orbit-dot" style="--d:0deg"></span>
+          <span class="orbit-dot" style="--d:90deg"></span>
+          <span class="orbit-dot" style="--d:180deg"></span>
+          <span class="orbit-dot" style="--d:270deg"></span>
+        </div>
+        <!-- Floating container with gentle bob -->
+        <div class="avatar-float">
+          <!-- Outer glow ring -->
+          <div class="avatar-ring">
+            <!-- Inner photo circle -->
+            <div class="avatar-photo-wrap" id="avatar-photo-wrap">
+              <img
+                src="portfolio_pic.png"
+                alt="NS Avatar"
+                class="avatar-photo"
+                id="avatar-photo"
+              />
+              <!-- Color overlay tinted by mode -->
+              <div class="avatar-tint" id="avatar-tint"></div>
+            </div>
+          </div>
+          <!-- Scan line sweep -->
+          <div class="avatar-scan"></div>
+          <!-- Corner HUD brackets -->
+          <div class="avatar-hud tl"></div>
+          <div class="avatar-hud tr"></div>
+          <div class="avatar-hud bl"></div>
+          <div class="avatar-hud br"></div>
+        </div>
+        <!-- Status badge below avatar -->
+        <div class="avatar-status">
+          <span class="avatar-status-dot"></span>
+          <span id="avatar-status-text">RED_TEAM :: ACTIVE</span>
+        </div>
+      </div><!-- /avatar -->
+
+      <!-- Hero text -->
+      <div class="text-center lg:text-left">
+        <div class="text-xs tracking-[.25em] uppercase mb-3" style="color:var(--text2)">
+          <i class="fa-solid fa-shield-halved mr-1" style="color:var(--accent)"></i>
+          <span id="mode-badge">RED TEAM</span> OPERATIVE
+        </div>
+        <h1 class="font-display font-900 text-3xl md:text-4xl lg:text-5xl tracking-tight leading-tight mb-3" style="color:var(--text)">
+          Network Security<br><span style="color:var(--accent)">Engineer</span>
+        </h1>
+        <p class="text-sm md:text-base mb-4" style="color:var(--text2)">
+          Cybersecurity Engineer &bull; Red &amp; Blue Team Specialist &bull; Cisco Datacenter
+        </p>
+        <div class="hero-tagline inline-block mb-6" id="hero-tagline"></div>
+        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
+          <a href="#projects"
+             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold transition-all"
+             style="background:var(--accent);color:#000"
+             onmouseover="this.style.boxShadow='0 0 20px var(--accent-dim)'"
+             onmouseout="this.style.boxShadow='none'">
+            <i class="fa-solid fa-folder-open"></i> View Projects
+          </a>
+          <a href="#about"
+             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold border transition-all"
+             style="border-color:var(--border);color:var(--text)"
+             onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+             onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text)'">
+            <i class="fa-solid fa-user"></i> About Me
+          </a>
+        </div>
+        <div class="flex gap-4 mt-6 justify-center lg:justify-start">
+          <a href="https://github.com/kovar-cmk/my-Profile" class="text-lg transition-colors" style="color:var(--text2)" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'"><i class="fa-brands fa-github"></i></a>
+          <a href="https://www.linkedin.com/in/abdelbasset-benghina-512144124/" class="text-lg transition-colors" style="color:var(--text2)" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'"><i class="fa-brands fa-linkedin"></i></a>
+          <a href="https://x.com/bassetbng" class="text-lg transition-colors" style="color:var(--text2)" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'"><i class="fa-brands fa-twitter"></i></a>
+          <a href="mailto:bassetben85@email.com" class="text-lg transition-colors" style="color:var(--text2)" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text2)'"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+      </div><!-- /hero text -->
+    </div>
+
+    <!-- Scroll indicator -->
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+      <span class="text-xs tracking-widest uppercase" style="color:var(--text2)">Scroll</span>
+      <div style="width:1px;height:30px;background:linear-gradient(to bottom,var(--accent),transparent);animation:scrollPulse 2s ease-in-out infinite"></div>
+    </div>
+  </section>
+
+  <!-- ──────────────────── SKILLS ────────────────────────── -->
+  <section id="skills" class="max-w-6xl mx-auto px-4 py-24">
+    <div class="fade-up">
+      <span class="section-prefix">// Capabilities</span>
+      <h2 class="section-title">Skill Matrix</h2>
+    </div>
+    <div id="skills-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 fade-up"></div>
+  </section>
+
+  <!-- ──────────────────── PROJECTS (Graph) ──────────────── -->
+  <section id="projects" class="max-w-6xl mx-auto px-4 py-24">
+    <div class="fade-up">
+      <span class="section-prefix">// Operations</span>
+      <h2 class="section-title">Project Graph</h2>
+      <p class="text-sm mt-3" style="color:var(--text2)" id="tree-desc">
+        Attack surface mapped. Hover nodes to inspect.
+      </p>
+      <p class="text-xs mt-1" style="color:var(--text2);opacity:.6">
+        <i class="fa-solid fa-circle-info mr-1"></i>
+        Drag to explore &bull; Hover leaf nodes for details &bull; Terminal: <code style="color:var(--accent)">scan</code> to refresh
+      </p>
+    </div>
+    <!-- vis-network renders inside this div -->
+    <div id="project-tree" class="mt-8 fade-up"></div>
+  </section>
+
+  <!-- ──────────────────── ABOUT ─────────────────────────── -->
+  <section id="about" class="max-w-6xl mx-auto px-4 py-24">
+    <div class="fade-up">
+      <span class="section-prefix">// Profile</span>
+      <h2 class="section-title">About</h2>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-6 mt-10">
+      <div class="lg:col-span-2 about-card fade-up">
+        <p class="text-sm leading-relaxed mb-4" style="color:var(--text2)">
+          I build and break network infrastructure for a living. My work sits at the intersection of
+          <span style="color:var(--accent)">Cisco datacenter architecture</span> and
+          <span style="color:var(--accent)">offensive/defensive security</span> — from designing ACI fabrics
+          and automating NX-OS deployments to finding the gaps that others miss.
+        </p>
+        <p class="text-sm leading-relaxed mb-4" style="color:var(--text2)">
+          I don't do checklist security. I think in kill chains, attack graphs, and defense-in-depth layers.
+          Every network I touch gets stress-tested from both sides:
+          <strong style="color:var(--text)">what would I exploit?</strong> and
+          <strong style="color:var(--text)">what would I defend?</strong>
+        </p>
+        <p class="text-sm leading-relaxed" style="color:var(--text2)">
+          Background in enterprise networking — Nexus 9K, Catalyst, Firepower, DNA Center. Transitioned
+          into security because I kept finding the same misconfigurations, the same blind spots, the same
+          "it works in production" excuses. Now I fix them before someone else exploits them.
+        </p>
+      </div>
+      <div class="flex flex-col gap-4 fade-up">
+        <div class="stat-box"><div class="stat-num">3+</div><div class="stat-label">Years Experience</div></div>
+        <div class="stat-box"><div class="stat-num">5</div><div class="stat-label">Vulnerabilities Found</div></div>
+        <div class="stat-box"><div class="stat-num">8+</div><div class="stat-label">Networks Secured</div></div>
+        <div class="stat-box"><div class="stat-num" id="ctf-stat">Top 100 team <br>globally</div><div class="stat-label">CTF Ranking</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────── TECH STACK ────────────────────── -->
+  <section id="tech" class="max-w-6xl mx-auto px-4 py-24">
+    <div class="fade-up">
+      <span class="section-prefix">// Arsenal</span>
+      <h2 class="section-title">Tech Stack</h2>
+    </div>
+    <div id="tech-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-10 fade-up"></div>
+  </section>
+
+</main>
+
+<!-- ═══ FOOTER ═══════════════════════════════════════════════ -->
+<footer class="relative z-10 py-8 px-4">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+    <div class="text-xs" style="color:var(--text2)">
+      <span style="color:var(--accent)">NS://</span> Designed as a security interface, not a template.
+    </div>
+    <div class="flex items-center gap-4 text-xs" style="color:var(--text2)">
+      <span>Built with raw HTML, CSS &amp; JS</span>
+      <span style="color:var(--border)">|</span>
+      <span id="footer-mode" style="color:var(--accent)">RED MODE ACTIVE</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ═══ TERMINAL WIDGET ══════════════════════════════════════ -->
+<div id="terminal" class="minimized">
+  <div class="term-bar" onclick="toggleTerminal()">
+    <div class="term-dots">
+      <span style="background:#ff5f57"></span>
+      <span style="background:#ffbd2e"></span>
+      <span style="background:#28ca42"></span>
+    </div>
+    <div class="term-title"><i class="fa-solid fa-terminal mr-1"></i> ns@kali:~</div>
+    <i class="fa-solid fa-chevron-up text-xs" style="color:var(--text2);transition:transform .3s" id="term-chevron"></i>
+  </div>
+  <div class="term-body" id="term-body">
+    <div><span class="prompt">ns@kali</span>:<span style="color:#5555ff">~</span>$ whoami<br><span class="output">network_security_engineer</span></div>
+    <div><span class="prompt">ns@kali</span>:<span style="color:#5555ff">~</span>$ cat /etc/mode<br><span class="output" id="term-mode-output">RED_TEAM :: ENGAGED</span></div>
+    <div><span class="prompt">ns@kali</span>:<span style="color:#5555ff">~</span>$ <span style="color:var(--accent)">Type 'help' for commands</span></div>
+  </div>
+  <div class="term-input-line">
+    <span class="prompt-symbol">$</span>
+    <input id="term-input" class="term-input" placeholder="help..." autocomplete="off">
+  </div>
+</div>
+
+<!-- ═══ PORTFOLIO SCRIPT ══════════════════════════════════════ -->
+ <!-- ──────────────────── CONTACT ─────────────────────────── -->
+<section id="contact" class="max-w-6xl mx-auto px-4 py-24">
+  <div class="fade-up">
+    <span class="section-prefix">// Communication</span>
+    <h2 class="section-title">Contact Me</h2>
+    <p class="text-sm mt-3" style="color:var(--text2)">
+      Initiate secure channel. All transmissions monitored.
+    </p>
+  </div>
+
+  <div class="contact-card fade-up mt-10">
+    <form id="contact-form" class="contact-form">
+
+      <div class="contact-group">
+        <input type="text" id="name" required>
+        <label>Name</label>
+      </div>
+
+      <div class="contact-group">
+        <input type="email" id="email" required>
+        <label>Email</label>
+      </div>
+
+      <div class="contact-group">
+        <textarea id="message" rows="5" required></textarea>
+        <label>Message</label>
+      </div>
+
+      <button type="submit" class="contact-btn">
+        <i class="fa-solid fa-paper-plane"></i>
+        Send Message
+      </button>
+
+      <div id="contact-status" class="contact-status"></div>
+    </form>
+  </div>
+</section>
+<script src="main.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
+</body>
+</html>

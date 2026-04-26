@@ -359,13 +359,13 @@ function showProjectCard(project, pos) {
 function hideProjectCard() {
   document.getElementById('project-card').style.display = 'none';
 }
-/*------------------------------------- ecucation------------------------- */
+/*------------------------------------- education ------------------------- */
 const certifications = [
   {
     name: "CCNA",
     issuer: "Cisco",
     desc: "Cisco Certified Network Associate — networking fundamentals, routing, switching, security.",
-    file: "assets/certs/ccna.pdf" // 🔥 path to your PDF
+    file: "assets/certs/ccna.pdf"
   },
   {
     name: "Another Cert",
@@ -374,6 +374,7 @@ const certifications = [
     file: "assets/certs/other.pdf"
   }
 ];
+
 function renderCertifications() {
   const grid = document.getElementById('cert-grid');
 
@@ -388,7 +389,8 @@ function renderCertifications() {
 
     </div>
   `).join('');
-};
+}
+
 /* ── CERTIFICATION PREVIEW ───────────────────────────────── */
 function showCertPreview(index, event) {
   const cert = certifications[index];
@@ -406,12 +408,13 @@ function showCertPreview(index, event) {
   card.style.top  = y + 'px';
 
   card.innerHTML = `
-  <strong style="color:var(--accent)">${cert.name}</strong>
-  <p>${cert.issuer}</p>
-  <div style="border:1px solid var(--accent); border-radius:8px; overflow:hidden;">
-    <embed src="${cert.file}" type="application/pdf" width="100%" height="220">
-  </div>
-`;
+    <strong style="color:var(--accent)">${cert.name}</strong>
+    <p>${cert.issuer}</p>
+    <div style="border:1px solid var(--accent); border-radius:8px; overflow:hidden;">
+      <embed src="${cert.file}" type="application/pdf" width="100%" height="220">
+    </div>
+  `;
+}
 
 function hideCertPreview() {
   document.getElementById('cert-preview').style.display = 'none';

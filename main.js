@@ -406,13 +406,12 @@ function showCertPreview(index, event) {
   card.style.top  = y + 'px';
 
   card.innerHTML = `
-    <strong style="color:var(--accent)">${cert.name}</strong>
-    <p>${cert.issuer}</p>
-    <iframe src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0"
-        width="350"
-        height="220"
-        style="border:none;"></iframe>  `;
-}
+  <strong style="color:var(--accent)">${cert.name}</strong>
+  <p>${cert.issuer}</p>
+  <div style="border:1px solid var(--accent); border-radius:8px; overflow:hidden;">
+    <embed src="${cert.file}" type="application/pdf" width="100%" height="220">
+  </div>
+`;
 
 function hideCertPreview() {
   document.getElementById('cert-preview').style.display = 'none';

@@ -408,8 +408,10 @@ function showCertPreview(index, event) {
   card.innerHTML = `
     <strong style="color:var(--accent)">${cert.name}</strong>
     <p>${cert.issuer}</p>
-    <iframe src="${cert.file}" width="350" height="220"></iframe>
-  `;
+    <iframe src="${cert.file}#toolbar=0&navpanes=0&scrollbar=0"
+        width="350"
+        height="220"
+        style="border:none;"></iframe>  `;
 }
 
 function hideCertPreview() {

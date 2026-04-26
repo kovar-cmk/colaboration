@@ -670,6 +670,7 @@ function init() {
   renderSkills();
   renderGraph();
   renderTechStack();
+  renderCertifications();
   
   // Ensure you replace this with your actual EmailJS Public Key
   emailjs.init("Pb7k6IguYw7JGM-ls"); 

@@ -359,63 +359,7 @@ function showProjectCard(project, pos) {
 function hideProjectCard() {
   document.getElementById('project-card').style.display = 'none';
 }
-/*------------------------------------- ecucation------------------------- */
-const certifications = [
-  {
-    name: "CCNA",
-    issuer: "Cisco",
-    desc: "Cisco Certified Network Associate — networking fundamentals, routing, switching, security.",
-    file: "assets/certs/ccna.pdf" // 🔥 path to your PDF
-  },
-  {
-    name: "Another Cert",
-    issuer: "Platform",
-    desc: "Description here...",
-    file: "assets/certs/other.pdf"
-  }
-];
-function renderCertifications() {
-  const grid = document.getElementById('cert-grid');
 
-  grid.innerHTML = certifications.map((cert, i) => `
-    <div class="cert-card"
-         onmouseenter="showCertPreview(${i}, event)"
-         onmouseleave="hideCertPreview()">
-
-      <h3>${cert.name}</h3>
-      <p>${cert.desc}</p>
-      <span class="issuer">${cert.issuer}</span>
-
-    </div>
-  `).join('');
-};
-/* ── CERTIFICATION PREVIEW ───────────────────────────────── */
-function showCertPreview(index, event) {
-  const cert = certifications[index];
-  const card = document.getElementById('cert-preview');
-
-  card.style.display = 'block';
-
-  let x = event.clientX + 20;
-  let y = event.clientY + 20;
-
-  if (x + 400 > window.innerWidth) x -= 420;
-  if (y + 300 > window.innerHeight) y -= 320;
-
-  card.style.left = x + 'px';
-  card.style.top  = y + 'px';
-
-  card.innerHTML = `
-  <strong style="color:var(--accent)">${cert.name}</strong>
-  <p>${cert.issuer}</p>
-  <div style="border:1px solid var(--accent); border-radius:8px; overflow:hidden;">
-    <embed src="${cert.file}" type="application/pdf" width="100%" height="220">
-  </div>
-`;
-
-function hideCertPreview() {
-  document.getElementById('cert-preview').style.display = 'none';
-}
 /* ── TECH STACK RENDER ───────────────────────────────────── */
 function renderTechStack() {
   const grid = document.getElementById('tech-grid');
